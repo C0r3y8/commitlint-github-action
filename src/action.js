@@ -6,6 +6,7 @@ const github = require('@actions/github')
 const lint = require('@commitlint/lint').default
 const { format } = require('@commitlint/format')
 const load = require('@commitlint/load').default
+const conventionalChangelog = require('conventional-changelog')
 const gitCommits = require('./gitCommits')
 const generateOutputs = require('./generateOutputs')
 
@@ -19,6 +20,22 @@ const configPath = resolve(
 )
 
 const { context: eventContext } = github
+
+const streamToString = stream => {
+  let str = ''
+
+  return new Promise(function(resolve, reject) {
+    stream.on('data', data => {
+      str += data.toString()
+    })
+    stream.on('end', () => {
+      resolve(str)
+    })
+    stream.on('error', err => {
+      reject(err)
+    })
+  })
+}
 
 const pushEventHasOnlyOneCommit = from => {
   const gitEmptySha = '0000000000000000000000000000000000000000'
@@ -133,8 +150,18 @@ const showLintResults = async ([from, to]) => {
     })),
   )
   const formattedResults = formatErrors(lintedCommits)
+  const changelog = await streamToString(
+    conventionalChangelog(
+      {
+        outputUnreleased: true,
+        preset: 'angular',
+      },
+      {},
+      { from },
+    ),
+  )
 
-  generateOutputs(lintedCommits)
+  generateOutputs(lintedCommits, formattedResults, changelog)
 
   // disable workflow commands
   const token = uuidv4()

@@ -15,8 +15,12 @@ const mapResultOutput = ({
   warnings: warnings.map(mapMessageValidation),
 })
 
-const generateOutputs = lintedCommits => {
-  const resultsOutput = lintedCommits.map(mapResultOutput)
+const generateOutputs = (lintedCommits, comment, changelog) => {
+  const resultsOutput = {
+    changelog: '',
+    comment: '',
+    json: lintedCommits.map(mapResultOutput),
+  }
 
   core.setOutput(resultsOutputId, resultsOutput)
 }
