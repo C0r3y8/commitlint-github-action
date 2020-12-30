@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.2.0](https://github.com/C0r3y8/commitlint-github-action/compare/v2.1.6...v2.2.0) (2020-12-30)
+
 ### [2.1.6](https://github.com/wagoid/commitlint-github-action/compare/v2.1.5...v2.1.6) (2020-12-16)
 
 ### [2.1.5](https://github.com/wagoid/commitlint-github-action/compare/v2.1.4...v2.1.5) (2020-12-16)
@@ -14,17 +16,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [2.1.1](https://github.com/wagoid/commitlint-github-action/compare/v2.1.0...v2.1.1) (2020-11-11)
 
-
 ### Bug Fixes
 
-* do not run workflow commands in commit messages ([d67c2ec](https://github.com/wagoid/commitlint-github-action/commit/d67c2ec96c0039c3cdbde4e677be13127062ed85))
+- do not run workflow commands in commit messages ([d67c2ec](https://github.com/wagoid/commitlint-github-action/commit/d67c2ec96c0039c3cdbde4e677be13127062ed85))
 
 ## [2.1.0](https://github.com/wagoid/commitlint-github-action/compare/v2.0.5...v2.1.0) (2020-09-14)
 
-
 ### Features
 
-* upgrade dependencies to their latest version ([f162ac0](https://github.com/wagoid/commitlint-github-action/commit/f162ac07f904e8b5578fa77172b997145fd61b7a))
+- upgrade dependencies to their latest version ([f162ac0](https://github.com/wagoid/commitlint-github-action/commit/f162ac07f904e8b5578fa77172b997145fd61b7a))
 
 ### 2.0.5 (2020-09-14)
 
