@@ -34,7 +34,7 @@ outputs:
     description: The error and warning messages for each one of the analyzed commits
 runs:
   using: docker
-  image: docker://C0r3y8/commitlint-github-action:2.2.0
+  image: docker://c0r3y8/commitlint-github-action:2.2.0
 branding:
   icon: check-square
   color: blue
