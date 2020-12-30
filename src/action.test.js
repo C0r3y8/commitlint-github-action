@@ -286,26 +286,22 @@ describe('Commit Linter action', () => {
       })
       td.replace(process, 'cwd', () => cwd)
 
-      expectedResultsOutput = {
-        changelog: '',
-        comment: '',
-        json: [
-          {
-            hash: to,
-            message: secondMessage,
-            valid: false,
-            errors: ['subject may not be empty', 'type may not be empty'],
-            warnings: [],
-          },
-          {
-            hash: first,
-            message: firstMessage,
-            valid: false,
-            errors: ['subject may not be empty', 'type may not be empty'],
-            warnings: [],
-          },
-        ],
-      }
+      expectedResultsOutput = [
+        {
+          hash: to,
+          message: secondMessage,
+          valid: false,
+          errors: ['subject may not be empty', 'type may not be empty'],
+          warnings: [],
+        },
+        {
+          hash: first,
+          message: firstMessage,
+          valid: false,
+          errors: ['subject may not be empty', 'type may not be empty'],
+          warnings: [],
+        },
+      ]
     })
 
     it('should NOT show errors for a message from before the push', async () => {
@@ -331,7 +327,12 @@ describe('Commit Linter action', () => {
     it('should generate a JSON output of the errors', async () => {
       await runAction()
 
-      td.verify(core.setOutput(resultsOutputId, expectedResultsOutput))
+      td.verify(
+        core.setOutput(
+          resultsOutputId,
+          td.matchers.contains({ json: expectedResultsOutput }),
+        ),
+      )
     })
   })
 
@@ -397,23 +398,24 @@ describe('Commit Linter action', () => {
     })
 
     it('should generate a JSON output of the messages', async () => {
-      const expectedResultsOutput = {
-        changelog: '',
-        comment: '',
-        json: [
-          {
-            hash: commitHash,
-            message: 'chore: correct message',
-            valid: true,
-            errors: [],
-            warnings: [],
-          },
-        ],
-      }
+      const expectedResultsOutput = [
+        {
+          hash: commitHash,
+          message: 'chore: correct message',
+          valid: true,
+          errors: [],
+          warnings: [],
+        },
+      ]
 
       await runAction()
 
-      td.verify(core.setOutput(resultsOutputId, expectedResultsOutput))
+      td.verify(
+        core.setOutput(
+          resultsOutputId,
+          td.matchers.contains({ json: expectedResultsOutput }),
+        ),
+      )
     })
   })
 
@@ -434,27 +436,23 @@ describe('Commit Linter action', () => {
       td.replace(process, 'cwd', () => cwd)
       td.replace(console, 'log')
 
-      expectedResultsOutput = {
-        changelog: '',
-        comment: '',
-        json: [
-          {
-            hash: to,
-            message:
-              'chore: correct message\n\nsome context without leading blank line',
-            valid: true,
-            errors: [],
-            warnings: ['body must have leading blank line'],
-          },
-          {
-            hash: from,
-            message: 'chore: correct message with no warnings',
-            valid: true,
-            errors: [],
-            warnings: [],
-          },
-        ],
-      }
+      expectedResultsOutput = [
+        {
+          hash: to,
+          message:
+            'chore: correct message\n\nsome context without leading blank line',
+          valid: true,
+          errors: [],
+          warnings: ['body must have leading blank line'],
+        },
+        {
+          hash: from,
+          message: 'chore: correct message with no warnings',
+          valid: true,
+          errors: [],
+          warnings: [],
+        },
+      ]
     })
 
     it('should pass and show that warnings exist', async () => {
@@ -467,7 +465,12 @@ describe('Commit Linter action', () => {
     it('should show the results in an output', async () => {
       await runAction()
 
-      td.verify(core.setOutput(resultsOutputId, expectedResultsOutput))
+      td.verify(
+        core.setOutput(
+          resultsOutputId,
+          td.matchers.contains({ json: expectedResultsOutput }),
+        ),
+      )
     })
 
     describe('and failOnWarnings is set to true', () => {
@@ -486,7 +489,12 @@ describe('Commit Linter action', () => {
       it('should show the results in an output', async () => {
         await runAction()
 
-        td.verify(core.setOutput(resultsOutputId, expectedResultsOutput))
+        td.verify(
+          core.setOutput(
+            resultsOutputId,
+            td.matchers.contains({ json: expectedResultsOutput }),
+          ),
+        )
       })
     })
   })
@@ -521,31 +529,32 @@ describe('Commit Linter action', () => {
     })
 
     it('should show the results in an output', async () => {
-      const expectedResultsOutput = {
-        changelog: '',
-        comment: '',
-        json: [
-          {
-            hash: secondHash,
-            message: 'wrong message',
-            valid: false,
-            errors: ['subject may not be empty', 'type may not be empty'],
-            warnings: [],
-          },
-          {
-            hash: firstHash,
-            message:
-              'chore: correct message\n\nsome context without leading blank line',
-            valid: true,
-            errors: [],
-            warnings: ['body must have leading blank line'],
-          },
-        ],
-      }
+      const expectedResultsOutput = [
+        {
+          hash: secondHash,
+          message: 'wrong message',
+          valid: false,
+          errors: ['subject may not be empty', 'type may not be empty'],
+          warnings: [],
+        },
+        {
+          hash: firstHash,
+          message:
+            'chore: correct message\n\nsome context without leading blank line',
+          valid: true,
+          errors: [],
+          warnings: ['body must have leading blank line'],
+        },
+      ]
 
       await runAction()
 
-      td.verify(core.setOutput(resultsOutputId, expectedResultsOutput))
+      td.verify(
+        core.setOutput(
+          resultsOutputId,
+          td.matchers.contains({ json: expectedResultsOutput }),
+        ),
+      )
     })
 
     describe('and failOnWarnings is set to true', () => {
