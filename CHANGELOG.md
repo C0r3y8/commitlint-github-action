@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [2.3.1](https://github.com/C0r3y8/commitlint-github-action/compare/v2.3.0...v2.3.1) (2020-12-30)
+
+
+### Bug Fixes
+
+* **output:** replace empty string by correct output for changelog and comment ([#2](https://github.com/C0r3y8/commitlint-github-action/issues/2)) ([007d241](https://github.com/C0r3y8/commitlint-github-action/commit/007d241fead155acb501d2ef325e33a85276320d))
+
 ## [2.3.0](https://github.com/C0r3y8/commitlint-github-action/compare/v2.1.6...v2.3.0) (2020-12-30)
 
 
