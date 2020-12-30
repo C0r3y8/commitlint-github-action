@@ -17,8 +17,8 @@ const mapResultOutput = ({
 
 const generateOutputs = (lintedCommits, comment, changelog) => {
   const resultsOutput = {
-    changelog: '',
-    comment: '',
+    changelog: changelog,
+    comment: comment,
     json: lintedCommits.map(mapResultOutput),
   }
 
