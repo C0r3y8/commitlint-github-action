@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [3.0.0](https://github.com/C0r3y8/commitlint-github-action/compare/v2.3.1...v3.0.0) (2020-12-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* **lint:** enable linting of PR title for team that work with fork and squash (#3)
+
+### Features
+
+* **lint:** enable linting of PR title for team that work with fork and squash ([#3](https://github.com/C0r3y8/commitlint-github-action/issues/3)) ([030d609](https://github.com/C0r3y8/commitlint-github-action/commit/030d609e173b3ab92c49ac131134195e049514b6))
+
 ### [2.3.1](https://github.com/C0r3y8/commitlint-github-action/compare/v2.3.0...v2.3.1) (2020-12-30)
 
 ### Bug Fixes
