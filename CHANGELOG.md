@@ -4,17 +4,15 @@ All notable changes to this project will be documented in this file. See [standa
 
 ### [2.3.1](https://github.com/C0r3y8/commitlint-github-action/compare/v2.3.0...v2.3.1) (2020-12-30)
 
-
 ### Bug Fixes
 
-* **output:** replace empty string by correct output for changelog and comment ([#2](https://github.com/C0r3y8/commitlint-github-action/issues/2)) ([007d241](https://github.com/C0r3y8/commitlint-github-action/commit/007d241fead155acb501d2ef325e33a85276320d))
+- **output:** replace empty string by correct output for changelog and comment ([#2](https://github.com/C0r3y8/commitlint-github-action/issues/2)) ([007d241](https://github.com/C0r3y8/commitlint-github-action/commit/007d241fead155acb501d2ef325e33a85276320d))
 
 ## [2.3.0](https://github.com/C0r3y8/commitlint-github-action/compare/v2.1.6...v2.3.0) (2020-12-30)
 
-
 ### Features
 
-* **output:** include changelog and raw formatted error in output ([cbd634e](https://github.com/C0r3y8/commitlint-github-action/commit/cbd634ed92fff514401335a64346a11e1dd93ee7))
+- **output:** include changelog and raw formatted error in output ([cbd634e](https://github.com/C0r3y8/commitlint-github-action/commit/cbd634ed92fff514401335a64346a11e1dd93ee7))
 
 ### [2.2.0](https://github.com/C0r3y8/commitlint-github-action/compare/v2.1.6...v2.2.0) (2020-12-30)
 

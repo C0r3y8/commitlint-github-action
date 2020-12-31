@@ -19,6 +19,7 @@ const {
 
 const initialEnv = { ...process.env }
 
+const getPR = td.func('getPR')
 const listCommits = td.func('listCommits')
 
 const runAction = () => {
@@ -26,12 +27,13 @@ const runAction = () => {
   class MockOctokit {
     constructor() {
       this.pulls = {
+        get: getPR,
         listCommits,
       }
     }
   }
 
-  updateEnvVars({ GITHBU_TOKEN: 'test-github-token' })
+  updateEnvVars({ GITHUB_TOKEN: 'test-github-token' })
   td.replace(github, 'GitHub', MockOctokit)
 
   return require('./action')()
@@ -265,6 +267,7 @@ describe('Commit Linter action', () => {
     let expectedResultsOutput
     const firstMessage = 'wrong message 1'
     const secondMessage = 'wrong message 2'
+    const prTitle = 'Bad PR Title'
 
     beforeEach(async () => {
       cwd = await git.bootstrap('fixtures/conventional')
@@ -275,6 +278,15 @@ describe('Commit Linter action', () => {
       await createPullRequestEventPayload(cwd)
       const [, first, to] = await getCommitHashes(cwd)
       updatePullRequestEnvVars(cwd, to)
+      td.when(
+        getPR({
+          owner: 'wagoid',
+          repo: 'commitlint-github-action',
+          pull_number: '1',
+        }),
+      ).thenResolve({
+        data: { title: prTitle },
+      })
       td.when(
         listCommits({
           owner: 'wagoid',
@@ -287,6 +299,13 @@ describe('Commit Linter action', () => {
       td.replace(process, 'cwd', () => cwd)
 
       expectedResultsOutput = [
+        {
+          hash: prTitle + ' #1',
+          message: prTitle,
+          valid: false,
+          errors: ['subject may not be empty', 'type may not be empty'],
+          warnings: [],
+        },
         {
           hash: to,
           message: secondMessage,
@@ -310,6 +329,12 @@ describe('Commit Linter action', () => {
       td.verify(core.setFailed(contains('message from before push')), {
         times: 0,
       })
+    })
+
+    it('should show errors for the pr title', async () => {
+      await runAction()
+
+      td.verify(core.setFailed(contains(prTitle)))
     })
 
     it('should show errors for the first wrong message', async () => {
@@ -344,6 +369,15 @@ describe('Commit Linter action', () => {
       await createPullRequestEventPayload(cwd)
       const [to] = await getCommitHashes(cwd)
       updatePullRequestEnvVars(cwd, to)
+      td.when(
+        getPR({
+          owner: 'wagoid',
+          repo: 'commitlint-github-action',
+          pull_number: '1',
+        }),
+      ).thenResolve({
+        data: { title: 'Bad PR Title' },
+      })
       td.when(
         listCommits({
           owner: 'wagoid',
