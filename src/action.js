@@ -12,7 +12,7 @@ const generateOutputs = require('./generateOutputs')
 
 const pullRequestEvent = 'pull_request'
 
-const { GITHUB_EVENT_NAME, GITHUB_SHA } = process.env
+const { GITHUB_EVENT_NAME, GITHUB_SHA, COMMITLINT_ONLY_PR_TITLE } = process.env
 
 const configPath = resolve(
   process.env.GITHUB_WORKSPACE,
@@ -35,6 +35,18 @@ const streamToString = stream => {
       reject(err)
     })
   })
+}
+
+const getPRTitle = async () => {
+  const octokit = new github.GitHub(core.getInput('token'))
+  const { owner, repo, number } = eventContext.issue
+  const { data: pullRequest } = await octokit.pulls.get({
+    owner,
+    repo,
+    pull_number: number,
+  })
+
+  return pullRequest.title
 }
 
 const pushEventHasOnlyOneCommit = from => {
@@ -138,6 +150,8 @@ const handleOnlyWarnings = formattedResults => {
 }
 
 const showLintResults = async ([from, to]) => {
+  const isPullRequestEvent = GITHUB_EVENT_NAME === pullRequestEvent
+  const prTitle = isPullRequestEvent ? await getPRTitle() : ''
   const commits = await getHistoryCommits(from, to)
   const config = existsSync(configPath)
     ? await load({}, { file: configPath })
@@ -149,7 +163,17 @@ const showLintResults = async ([from, to]) => {
       hash: commit.hash,
     })),
   )
+  const lintedTitle = isPullRequestEvent
+    ? [
+        {
+          lintResult: await lint(prTitle, config.rules, opts),
+          hash: prTitle + ' #' + eventContext.issue.number.toString(),
+        },
+      ]
+    : []
   const formattedResults = formatErrors(lintedCommits)
+  const formattedTitleResults = formatErrors(lintedTitle)
+
   const changelog = await streamToString(
     conventionalChangelog(
       {
@@ -161,18 +185,34 @@ const showLintResults = async ([from, to]) => {
     ),
   )
 
-  generateOutputs(lintedCommits, formattedResults, changelog)
+  generateOutputs({
+    changelog,
+    formattedResults,
+    formattedTitleResults,
+    lintedCommits,
+    lintedTitle,
+  })
 
   // disable workflow commands
   const token = uuidv4()
   console.log(`::stop-commands::${token}`)
 
-  if (hasOnlyWarnings(lintedCommits)) {
-    handleOnlyWarnings(formattedResults)
-  } else if (formattedResults) {
-    setFailed(formattedResults)
+  if (hasOnlyWarnings(lintedTitle)) {
+    handleOnlyWarnings(formattedTitleResults)
+  } else if (formattedTitleResults) {
+    setFailed(formattedTitleResults)
   } else {
     console.log('Lint free! 🎉')
+  }
+
+  if (!COMMITLINT_ONLY_PR_TITLE || !isPullRequestEvent) {
+    if (hasOnlyWarnings(lintedCommits)) {
+      handleOnlyWarnings(formattedResults)
+    } else if (formattedResults) {
+      setFailed(formattedResults)
+    } else {
+      console.log('Lint free! 🎉')
+    }
   }
 
   // enable workflow commands
